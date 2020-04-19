@@ -1,26 +1,29 @@
-import requests
+from lib import auth, get
 
-BASE_URL = "https://dogs.magnet.cl"
 
-def auth(email, password):
-    data = {
-        'email': email,
-        'password': password,
-    }
-    error_message = 'Invalid credentials'
 
-    response_data = requests.post(
-        BASE_URL + '/api/v1/auth/',
-        data=data,
-    )
-    res = response_data.json()
-    print(res)
+class Dog:
+    def __init__(self, id: int, name: str, breed: int):
+        self.id = id
+        self.name = name
+        self.breed = breed
 
-    if 'token' not in res:
-        if 'nonFieldErrors' in res:
-            raise ValueError(res['nonFieldErrors'])
-        raise ValueError(error_message)
-    return res['token']
+
+
+
+class Breed(object):
+    def __init__(self, id: int, name: str):
+        self.id = id
+        self.name = name
+        self.dogs: List[Dog] = []
+
+    def add_dog(self, dog: Dog):
+        self.dogs.append(dog)
+
+    def dogs_count(self) -> int:
+        return len(self.dogs)
+
+
 
 
 
@@ -29,37 +32,82 @@ class Doghouse:
     def __init__ (self):
         self.breeds: List[Breed] = []
         self.dogs: List[Dog] = []
+            
 
-        
 
     def get_data(self, token):
-        print(token)
-        headers = {
-        'content-type': 'application/json',
-        'Authorization': 'JWT' + token
-        }
-   
+        breeds = get(url='http://dogs.magnet.cl/api/v1/breeds/', token=token)
+        self.breeds.append(breeds['results'])
 
-        data_breeds = requests.get("https://dogs.magnet.cl/api/v1/breeds/?limit=20&offset=10", headers=headers)
-        data_dogs = requests.get("https://dogs.magnet.cl/api/v1/dogs/", token, headers=headers)
-        print(data_breeds)
-        print(data_dogs)
+        dogs = get(url='http://dogs.magnet.cl/api/v1/dogs/', token=token)
+        self.dogs.append(dogs['results'])
 
-        return data_breeds.json(), data_dogs.json()
+
+        
+        limit = 10
+        while limit <= breeds['count']:
+            url = 'http://dogs.magnet.cl/api/v1/breeds/?limit={}&offset=10'.format(limit)
+            breeds = get(url, token=token)
+            self.breeds.append(breeds['results'])
+            limit += 10
+
+
+
+        b = dogs['count']/len(dogs['results'])
+
+
+        page = 1
+        while page <= b:
+            url = 'http://dogs.magnet.cl/api/v1/dogs/?page={}'.format(page)
+            print(url)
+            dogs = get(url, token=token)
+            print(dogs)
+            self.dogs.append(dogs['results'])
+            page += 1
+        
+        return breeds, dogs
+
+    def get_total_breeds(self):
+        different_breeds = []
+        dog_repetidos = []
+        for i in self.breeds:
+            for x in i:
+                if x['name'] is not different_breeds:
+                     different_breeds.append(x['name'])
+                else:
+                    print(x['name'])
+                    dog_repetidos.append(x['name'])
+                    
+        size = len(different_breeds)
+        return size
+    
+
+      def get_total_dogs(self):
+       
+
+
+ 
+
+
+     
+
+
 
 
 
 def main():
     credentials = {
-        'email': 'jarb29@gmail.com',
-        'password': 'Alexander29'
-    }
-
-    token = auth(**credentials)
+            'email': 'jarb29@gmail.com',
+            'password': 'Alexander29'
+        }
 
     dog_house = Doghouse()
+    token = auth(**credentials)
     dog_house.get_data(token=token)
-   
+    total_breeds = dog_house.get_total_breeds()
+    total_dogs = dog_house.get_total_dogs()
+
+  
 
 main()
 

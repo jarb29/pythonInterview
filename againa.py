@@ -1,0 +1,22 @@
+[{'id': 1, 'name': 'Affenpinscher'}, 
+{'id': 2, 'name': 'Afghan Hound'}, 
+{'id': 3, 'name': 'Airedale Terrier'}, 
+{'id': 4, 'name': 'Akita'}, 
+{'id': 5, 'name': 'Alaskan Malamute'}, 
+{'id': 6, 'name': 'American English Coonhound'}, 
+{'id': 7, 'name': 'American Eskimo Dog'}, 
+{'id': 8, 'name': 'American Foxhound'}, 
+{'id': 9, 'name': 'American Staffordshire Terrier'},
+ {'id': 10, 'name': 'American Water Spaniel'}]}
+[{'count': 186, 'next': 'http://dogs.magnet.cl/api/v1/breeds/?limit=10&offset=10', 
+'previous': None, 'results': 
+[{'id': 1, 'name': 'Affenpinscher'}, 
+{'id': 2, 'name': 'Afghan Hound'}, 
+{'id': 3, 'name': 'Airedale Terrier'},
+ {'id': 4, 'name': 'Akita'}, 
+ {'id': 5, 'name': 'Alaskan Malamute'}, 
+ {'id': 6, 'name': 'American English Coonhound'},
+  {'id': 7, 'name': 'American Eskimo Dog'}, 
+  {'id': 8, 'name': 'American Foxhound'}, 
+  {'id': 9, 'name': 'American Staffordshire Terrier'},
+   {'id': 10, 'name': 'American Water Spaniel'}]}]
