@@ -1,4 +1,5 @@
 from lib import auth, get
+import statistics 
 
 
 
@@ -52,16 +53,13 @@ class Doghouse:
             limit += 10
 
 
-
         b = dogs['count']/len(dogs['results'])
 
 
         page = 1
         while page <= b:
             url = 'http://dogs.magnet.cl/api/v1/dogs/?page={}'.format(page)
-            print(url)
             dogs = get(url, token=token)
-            print(dogs)
             self.dogs.append(dogs['results'])
             page += 1
         
@@ -75,14 +73,49 @@ class Doghouse:
                 if x['name'] is not different_breeds:
                      different_breeds.append(x['name'])
                 else:
-                    print(x['name'])
                     dog_repetidos.append(x['name'])
                     
         size = len(different_breeds)
+        print(size, 'different breeds')
         return size
     
 
-      def get_total_dogs(self):
+    
+    
+    def get_total_dogs(self):
+        dogs_names = []
+        for i in self.dogs:
+            for name in i:
+                dogs_names.append(name['name'])
+        size = len(dogs_names)
+        print(size, 'Is the number of total dogs containing in this data')
+        return dogs_names
+
+    def get_common_breed(self):
+        common_breed = []
+        for i in self.dogs:
+            for breed in i:
+                common_breed.append(breed['breed'])
+        res = max(set(common_breed), key = common_breed.count) 
+
+        for breeds in self.breeds:
+            for breed in breeds:
+                if breed['id'] == res:
+                    b = breed['name']
+                    print(b, 'is the most most popular breed')
+                    break
+            return  b
+        return b
+
+    def get_common_dog_name(self, names):
+
+        res = max(set(names), key= names.count)
+        print(res, 'Is the most popular name')
+        return res
+
+
+
+
        
 
 
@@ -106,6 +139,8 @@ def main():
     dog_house.get_data(token=token)
     total_breeds = dog_house.get_total_breeds()
     total_dogs = dog_house.get_total_dogs()
+    common_breed = dog_house.get_common_breed()
+    common_dog_name = dog_house.get_common_dog_name(total_dogs)
 
   
 
